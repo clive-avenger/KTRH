@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Appointment Confirmed - KTRH Booking System</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f8f9fa;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .card {
+      background: white;
+      text-align: center;
+      padding: 40px;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      max-width: 500px;
+      width: 90%;
+    }
+    h1 {
+      color: #2a7de1;
+      font-size: 28px;
+      margin-bottom: 15px;
+    }
+    p {
+      color: #555;
+      font-size: 16px;
+      margin-bottom: 30px;
+      line-height: 1.6;
+    }
+    .btn {
+      display: inline-block;
+      background: #2a7de1;
+      color: white;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 16px;
+      margin: 5px;
+      text-decoration: none;
+      transition: background 0.3s;
+    }
+    .btn:hover {
+      background: #1d5ca6;
+    }
+    .btn-secondary {
+      background: #6c757d;
+    }
+    .btn-secondary:hover {
+      background: #555;
+    }
+    .icon {
+      font-size: 60px;
+      color: #28a745;
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="icon">✔️</div>
+    <h1>Appointment Booked Successfully!</h1>
+    <p id="successMessage">
+      Thank you for booking with Kisii Teaching and Referral Hospital. Your appointment has been confirmed.
+    </p>
+    <div>
+      <a href="appointments.html" class="btn">View My Appointments</a>
+      <a href="book.html" class="btn btn-secondary">Book Another Appointment</a>
+    </div>
+  </div>
+
+  <script>
+    // Retrieve data stored from book.html
+    const name = sessionStorage.getItem("patientName");
+    const date = sessionStorage.getItem("date");
+
+    const messageEl = document.getElementById("successMessage");
+
+    if (name && date) {
+      const formattedDate = new Date(date).toLocaleDateString("en-GB", {
+        day: "numeric",
+        month: "long",
+        year: "numeric"
+      });
+      messageEl.textContent = `Thank you, ${name}! Your appointment for ${formattedDate} has been successfully booked.`;
+    } else {
+      messageEl.textContent = "Your appointment has been successfully booked.";
+    }
+  </script>
+</body>
+</html>

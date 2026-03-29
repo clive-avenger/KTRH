@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Sign Up - KTRH Booking System</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f8f9fa;
+    }
+    header {
+      background: #2a7de1;
+      color: white;
+      padding: 20px;
+      text-align: center;
+    }
+    header h1 {
+      margin: 0;
+    }
+    .container {
+      max-width: 500px;
+      margin: 50px auto;
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    h2 {
+      text-align: center;
+      color: #2a7de1;
+      margin-bottom: 20px;
+    }
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: bold;
+      color: #333;
+    }
+    input {
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 15px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-size: 14px;
+    }
+    input:focus {
+      border-color: #2a7de1;
+      outline: none;
+    }
+    .btn {
+      width: 100%;
+      background: #2a7de1;
+      color: white;
+      padding: 12px;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    .btn:hover {
+      background: #1d5ca6;
+    }
+    .link {
+      text-align: center;
+      margin-top: 15px;
+    }
+    .link a {
+      color: #2a7de1;
+      text-decoration: none;
+    }
+    .link a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>KTRH Booking System</h1>
+  </header>
+
+  <div class="container">
+    <h2>Create an Account</h2>
+    <form id="signupForm">
+      <label for="fullname">Full Name</label>
+      <input type="text" id="fullname" name="fullname" placeholder="Enter your full name" required>
+
+      <label for="email">Email Address</label>
+      <input type="email" id="email" name="email" placeholder="Enter your email" required>
+
+      <label for="password">Password</label>
+      <input type="password" id="password" name="password" placeholder="Enter password" required>
+
+      <label for="confirmPassword">Confirm Password</label>
+      <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirm password" required>
+
+      <button type="submit" class="btn">Sign Up</button>
+    </form>
+
+    <div class="link">
+      <p>Already have an account? <a href="book.html">Login here</a></p>
+    </div>
+  </div>
+
+  <!-- Firebase Signup Logic -->
+  <script type="module">
+    // Import Firebase SDKs
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+    import { getAuth, createUserWithEmailAndPassword, updateProfile } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+    import { getDatabase, ref, set } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
+
+    // Firebase config for KTRH
+    const firebaseConfig = {
+      apiKey: "AIzaSyA6HxYoAQ5nb3u_TohMAe3KtsAjJJNhxq8",
+      authDomain: "ktrh-98dc6.firebaseapp.com",
+      databaseURL: "https://ktrh-98dc6-default-rtdb.firebaseio.com",
+      projectId: "ktrh-98dc6",
+      storageBucket: "ktrh-98dc6.firebasestorage.app",
+      messagingSenderId: "836026469615",
+      appId: "1:836026469615:web:7857cef4d10fab891b1f1a"
+    };
+
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getDatabase(app);
+
+    // Handle sign-up
+    const signupForm = document.getElementById("signupForm");
+    signupForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+
+      const fullname = document.getElementById("fullname").value.trim();
+      const email = document.getElementById("email").value.trim();
+      const password = document.getElementById("password").value;
+      const confirmPassword = document.getElementById("confirmPassword").value;
+
+      if (password !== confirmPassword) {
+        alert("Passwords do not match!");
+        return;
+      }
+
+      // Create user in Firebase Authentication
+      createUserWithEmailAndPassword(auth, email, password)
+        .then((userCredential) => {
+          const user = userCredential.user;
+
+          // Save user info to Realtime Database
+          set(ref(db, "users/" + user.uid), {
+            fullname,
+            email,
+            createdAt: new Date().toISOString()
+          });
+
+          // Update display name
+          updateProfile(user, { displayName: fullname });
+
+          alert("Account created successfully!");
+          window.location.href = "book.html";
+        })
+        .catch((error) => {
+          alert("Error creating account: " + error.message);
+        });
+    });
+  </script>
+</body>
+</html>

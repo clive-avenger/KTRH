@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin Dashboard - KTRH Booking System</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #f8f9fa;
+    }
+
+    
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #2a7de1;
+      padding: 15px 30px;
+      color: white;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      flex-wrap: wrap;
+    }
+    .nav-logo {
+      margin: 0;
+      font-size: 20px;
+      font-weight: bold;
+    }
+    .nav-right {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    .nav-link {
+      color: white;
+      text-decoration: none;
+      margin: 0 12px;
+      font-size: 15px;
+      transition: color 0.3s, border-bottom 0.3s;
+      border-bottom: 2px solid transparent;
+    }
+    .nav-link:hover {
+      color: #d0e4ff;
+    }
+    .active-link {
+      border-bottom: 2px solid white;
+      font-weight: bold;
+    }
+    .logout-btn {
+      background: #dc3545;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      padding: 8px 14px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: background 0.3s;
+      margin-left: 15px;
+    }
+    .logout-btn:hover {
+      background: #b02a37;
+    }
+    .user-email {
+      font-size: 14px;
+      margin-left: 15px;
+      opacity: 0.9;
+    }
+    @media (max-width: 768px) {
+      .navbar {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .nav-right {
+        flex-direction: column;
+        align-items: flex-start;
+        width: 100%;
+        margin-top: 10px;
+      }
+      .nav-link {
+        display: block;
+        margin: 6px 0;
+      }
+      .logout-btn {
+        margin: 10px 0;
+      }
+    }
+
+    
+    .container {
+      max-width: 1100px;
+      margin: 40px auto;
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    h2 {
+      text-align: center;
+      color: #2a7de1;
+      margin-bottom: 25px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    th, td {
+      text-align: left;
+      padding: 12px;
+      border-bottom: 1px solid #ddd;
+    }
+    th {
+      background: #2a7de1;
+      color: white;
+    }
+    tr:hover {
+      background: #f1f1f1;
+    }
+    .status {
+      padding: 4px 8px;
+      border-radius: 5px;
+      font-weight: bold;
+      text-align: center;
+    }
+    .Pending {
+      background: #fff3cd;
+      color: #856404;
+    }
+    .Approved {
+      background: #d4edda;
+      color: #155724;
+    }
+    .Declined {
+      background: #f8d7da;
+      color: #721c24;
+    }
+    .action-btn {
+      border: none;
+      border-radius: 5px;
+      padding: 6px 10px;
+      cursor: pointer;
+      color: white;
+      font-size: 14px;
+      transition: background 0.3s;
+    }
+    .approve-btn {
+      background: #28a745;
+    }
+    .approve-btn:hover {
+      background: #218838;
+    }
+    .decline-btn {
+      background: #dc3545;
+    }
+    .decline-btn:hover {
+      background: #b02a37;
+    }
+    .login-section {
+      max-width: 400px;
+      margin: 80px auto;
+      text-align: center;
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    .login-section input {
+      width: 80%;
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+    .btn {
+      background: #2a7de1;
+      color: white;
+      padding: 10px 16px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+    .btn:hover {
+      background: #1d5ca6;
+    }
+  </style>
+</head>
+<body>
+
+  
+  <nav class="navbar">
+    <div class="nav-left">
+      <h2 class="nav-logo">KTRH Admin Dashboard</h2>
+    </div>
+    <div class="nav-right">
+      <a href="dashboard.html" class="nav-link">Dashboard</a>
+      <a href="book.html" class="nav-link">Book Appointment</a>
+      <a href="appointments.html" class="nav-link">My Appointments</a>
+      <a href="contact.html" class="nav-link">Contact</a>
+      <span id="userEmail" class="user-email"></span>
+      <button id="logoutNavBtn" class="logout-btn">Logout</button>
+    </div>
+  </nav>
+
+  
+  <div id="loginSection" class="login-section">
+    <h2>Admin Login</h2>
+    <input type="email" id="adminEmail" placeholder="Enter admin email" required>
+    <input type="password" id="adminPassword" placeholder="Enter password" required>
+    <button id="adminLoginBtn" class="btn">Login</button>
+  </div>
+
+  
+  <div id="adminPanel" class="container" style="display:none;">
+    <h2>All Appointments</h2>
+    <table id="appointmentsTable">
+      <thead>
+        <tr>
+          <th>Full Name</th>
+          <th>Email</th>
+          <th>Department</th>
+          <th>Doctor</th>
+          <th>Date</th>
+          <th>Time</th>
+          <th>Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="tableBody">
+        <tr><td colspan="8" style="text-align:center; color:#888;">Loading appointments...</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-app.js";
+    import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-auth.js";
+    import { getDatabase, ref, onValue, update } from "https://www.gstatic.com/firebasejs/11.0.1/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyA6HxYoAQ5nb3u_TohMAe3KtsAjJJNhxq8",
+      authDomain: "ktrh-98dc6.firebaseapp.com",
+      databaseURL: "https://ktrh-98dc6-default-rtdb.firebaseio.com",
+      projectId: "ktrh-98dc6",
+      storageBucket: "ktrh-98dc6.firebasestorage.app",
+      messagingSenderId: "836026469615",
+      appId: "1:836026469615:web:7857cef4d10fab891b1f1a"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getDatabase(app);
+
+    const loginSection = document.getElementById("loginSection");
+    const adminPanel = document.getElementById("adminPanel");
+    const adminLoginBtn = document.getElementById("adminLoginBtn");
+    const logoutBtn = document.getElementById("logoutNavBtn");
+    const userEmailEl = document.getElementById("userEmail");
+    const tableBody = document.getElementById("tableBody");
+
+    
+    adminLoginBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      const email = document.getElementById("adminEmail").value;
+      const password = document.getElementById("adminPassword").value;
+
+      signInWithEmailAndPassword(auth, email, password)
+        .then(() => alert("Login successful!"))
+        .catch((error) => alert("Login failed: " + error.message));
+    });
+
+    
+    const allowedAdmins = ["admin@ktrh.com", "ktrhadmin@gmail.com"];
+
+    onAuthStateChanged(auth, (user) => {
+      if (user && allowedAdmins.includes(user.email)) {
+        loginSection.style.display = "none";
+        adminPanel.style.display = "block";
+        userEmailEl.textContent = `Admin: ${user.email}`;
+        loadAppointments();
+      } else if (user) {
+        alert("Access denied: You are not authorized as an admin.");
+        signOut(auth);
+      } else {
+        loginSection.style.display = "block";
+        adminPanel.style.display = "none";
+        userEmailEl.textContent = "";
+      }
+    });
+
+    
+    function loadAppointments() {
+      const appointmentsRef = ref(db, "appointments");
+      onValue(appointmentsRef, (snapshot) => {
+        const data = snapshot.val();
+        tableBody.innerHTML = "";
+
+        if (!data) {
+          tableBody.innerHTML = `<tr><td colspan="8" style="text-align:center; color:#888;">No appointments found.</td></tr>`;
+          return;
+        }
+
+        Object.entries(data).forEach(([id, app]) => {
+          const row = `
+            <tr>
+              <td>${app.name}</td>
+              <td>${app.userEmail || "-"}</td>
+              <td>${app.department}</td>
+              <td>${app.doctor || "-"}</td>
+              <td>${app.date}</td>
+              <td>${app.time}</td>
+              <td><span class="status ${app.status || 'Pending'}">${app.status || 'Pending'}</span></td>
+              <td>
+                <button class="action-btn approve-btn" onclick="updateStatus('${id}', 'Approved')">Approve</button>
+                <button class="action-btn decline-btn" onclick="updateStatus('${id}', 'Declined')">Decline</button>
+              </td>
+            </tr>
+          `;
+          tableBody.innerHTML += row;
+        });
+      });
+    }
+
+    
+    window.updateStatus = function(id, newStatus) {
+      const appRef = ref(db, "appointments/" + id);
+      update(appRef, { status: newStatus })
+        .then(() => alert(`Appointment ${newStatus}`))
+        .catch((err) => alert("Error updating: " + err.message));
+    };
+
+    
+    logoutBtn.addEventListener("click", () => {
+      signOut(auth).then(() => {
+        alert("You have logged out successfully.");
+        window.location.href = "admin.html";
+      });
+    });
+
+    
+    const currentPage = window.location.pathname.split("/").pop();
+    const links = document.querySelectorAll(".nav-link");
+    links.forEach(link => {
+      if (link.getAttribute("href") === currentPage) {
+        link.classList.add("active-link");
+      }
+    });
+  </script>
+</body>
+</html>
